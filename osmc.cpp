@@ -111,7 +111,13 @@ void OSMC::setPower(int power)
     driveOutput();
 }
 
-void OSMC::driveOutput(void)
+// Hack to avoid virtual functions...
+void OSMC::driveOutput(void){
+    driveOutputCommon();
+    driveOutputHardware();
+}
+
+void OSMC::driveOutputCommon(void)
 {
     if(!attached())
         return;
@@ -173,6 +179,12 @@ void OSMC::driveOutputHardware(void){
     }
 }
 
+// Hack to avoid virtual functions...
+void TBB6612FNG::driveOutput(void){
+    driveOutputCommon();
+    driveOutputHardware();
+}
+
 void TBB6612FNG::driveOutputHardware(void){
     if ((pwm == 0) && brake)
     {
@@ -195,8 +207,8 @@ void TBB6612FNG::driveOutputHardware(void){
         }
         else {
             // Current flows 1 to 2, this is the "positive" direction
-            digitalWrite(ahiPin, LOW);
-            digitalWrite(bhiPin, HIGH);
+            digitalWrite(bhiPin, LOW);
+            digitalWrite(ahiPin, HIGH);
         }
         analogWrite(aliPin, pwm);
     }

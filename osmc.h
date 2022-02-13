@@ -31,6 +31,7 @@ class OSMC {
     protected:
         void init();
         void driveOutputHardware();
+        void driveOutputCommon();
         byte pwm, reverseDirection, brake, outputEnabled;
         byte enablePin=0xFF, aliPin=0xFF, bliPin=0xFF, ahiPin=0xFF, bhiPin=0xFF;
     private:
@@ -42,6 +43,7 @@ class TBB6612FNG : public OSMC {
         void attach(byte in1, byte in2, byte pwmin);
         void attach(byte enable, byte in1, byte in2, byte pwmin);
     private:
+        void driveOutput();
         void driveOutputHardware();
 };
 #endif
