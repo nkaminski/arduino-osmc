@@ -26,6 +26,7 @@ class OSMC {
         void setBrake(byte enabled);
         void setEnabled(byte enabled);
         void setPower(int power);
+        void setPower(byte power, bool reverse);
         bool attached();
         void detach();
     protected:

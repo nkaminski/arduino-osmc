@@ -111,10 +111,17 @@ void OSMC::setPower(int power)
     driveOutput();
 }
 
+void OSMC::setPower(byte power, bool reverse){
+    reverseDirection = reverse;
+    pwm = power;
+    driveOutput();
+}
+
 // Hack to avoid virtual functions...
 void OSMC::driveOutput(void){
     driveOutputCommon();
-    driveOutputHardware();
+    if(outputEnabled)
+        driveOutputHardware();
 }
 
 void OSMC::driveOutputCommon(void)
@@ -132,9 +139,6 @@ void OSMC::driveOutputCommon(void)
         digitalWrite(aliPin, LOW);
         digitalWrite(bhiPin, LOW);
         digitalWrite(bliPin, LOW);
-    }
-    else{
-        driveOutputHardware();
     }
 }
 
@@ -182,7 +186,8 @@ void OSMC::driveOutputHardware(void){
 // Hack to avoid virtual functions...
 void TBB6612FNG::driveOutput(void){
     driveOutputCommon();
-    driveOutputHardware();
+    if(outputEnabled)
+        driveOutputHardware();
 }
 
 void TBB6612FNG::driveOutputHardware(void){
