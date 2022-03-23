@@ -32,7 +32,7 @@ class OSMC {
     protected:
         void init();
         void driveOutputHardware();
-        void driveOutputCommon();
+        bool driveOutputCommon();
         byte pwm, reverseDirection, brake, outputEnabled;
         byte enablePin=0xFF, aliPin=0xFF, bliPin=0xFF, ahiPin=0xFF, bhiPin=0xFF;
     private:

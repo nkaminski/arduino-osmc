@@ -119,15 +119,17 @@ void OSMC::setPower(byte power, bool reverse){
 
 // Hack to avoid virtual functions...
 void OSMC::driveOutput(void){
-    driveOutputCommon();
+    if(!driveOutputCommon())
+        return;
     if(outputEnabled)
         driveOutputHardware();
 }
 
-void OSMC::driveOutputCommon(void)
+bool OSMC::driveOutputCommon(void)
 {
+    // Don't change any hardware state if not attached
     if(!attached())
-        return;
+        return false;
 
     if(enablePin != 0xFF){
         digitalWrite(enablePin, outputEnabled);
@@ -140,6 +142,7 @@ void OSMC::driveOutputCommon(void)
         digitalWrite(bhiPin, LOW);
         digitalWrite(bliPin, LOW);
     }
+    return true;
 }
 
 void OSMC::driveOutputHardware(void){
