@@ -186,13 +186,6 @@ void OSMC::driveOutputHardware(void){
     }
 }
 
-// Hack to avoid virtual functions...
-void TBB6612FNG::driveOutput(void){
-    driveOutputCommon();
-    if(outputEnabled)
-        driveOutputHardware();
-}
-
 void TBB6612FNG::driveOutputHardware(void){
     if ((pwm == 0) && brake)
     {
