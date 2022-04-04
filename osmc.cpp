@@ -107,17 +107,17 @@ void OSMC::setEnabled(byte enabled)
 void OSMC::setPower(int power)
 {
     reverseDirection = (power < 0);
-    pwm = constrain(abs(power), -255, 255);
+    pwm = constrain(abs(power), 0, 255);
     driveOutput();
 }
 
-void OSMC::setPower(byte power, bool reverse){
+void OSMC::setPower(byte power, bool reverse)
+{
     reverseDirection = reverse;
     pwm = power;
     driveOutput();
 }
 
-// Hack to avoid virtual functions...
 void OSMC::driveOutput(void){
     if(!driveOutputCommon())
         return;
