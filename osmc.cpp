@@ -36,6 +36,7 @@ void TBB6612FNG::attach(byte in1, byte in2, byte pwmin){
 
 void OSMC::init(){
     pwm=0;
+    rampTarget=0;
     reverseDirection=0;
     brake=0;
     outputEnabled=0;
@@ -86,7 +87,7 @@ void OSMC::detach(){
     bhiPin=0xFF;
 }
 
-void OSMC::setBrake(byte enabled)
+void OSMC::setBrake(bool enabled)
 {
     if (brake != enabled)
     {
@@ -95,7 +96,7 @@ void OSMC::setBrake(byte enabled)
     }
 }
 
-void OSMC::setEnabled(byte enabled)
+void OSMC::setEnabled(bool enabled)
 {
     if (enabled != outputEnabled)
     {
@@ -104,17 +105,44 @@ void OSMC::setEnabled(byte enabled)
     }
 }
 
-void OSMC::setPower(int power)
+void OSMC::setRampEnabled(bool enable)
 {
-    reverseDirection = (power < 0);
-    pwm = constrain(abs(power), 0, 255);
-    driveOutput();
+    if((!enable) && rampEnabled){
+        // Ramping on -> off transition
+        // "step" directly to target power
+        doRamp(UINT8_MAX);
+    }
+    rampEnabled = enable;
 }
 
 void OSMC::setPower(byte power, bool reverse)
 {
+    bool chDirection = (reverse != reverseDirection);
+    bool chPower = (rampTarget != power);
+    if(!(chDirection || chPower))
+        return;    // No change in direction or power
+
+    rampTarget = power;
     reverseDirection = reverse;
-    pwm = power;
+
+    if(rampEnabled){
+        if(chDirection)
+            pwm=0;     // Ramp up from zero if we changed direction
+        doRamp(0);     // "step" power down only at this time
+    }
+    else
+    {
+        doRamp(UINT8_MAX);    // Ramping disabled, therefore just "ramp" directly to the target power
+    }
+}
+
+void OSMC::doRamp(byte units){
+    if(rampTarget > pwm){
+        pwm += min(units, (rampTarget-pwm));
+    }
+    else{
+        pwm = rampTarget;
+    }
     driveOutput();
 }
 

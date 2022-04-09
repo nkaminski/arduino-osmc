@@ -23,10 +23,11 @@
 class OSMC {
     public:
         void attach(byte enable, byte ali, byte bli, byte ahi, byte bhi);
-        void setBrake(byte enabled);
-        void setEnabled(byte enabled);
-        void setPower(int power);
+        void setBrake(bool enabled);
+        void setEnabled(bool enabled);
         void setPower(byte power, bool reverse);
+        void setRampEnabled(bool enable);
+        void doRamp(byte units);
         bool attached();
         void detach();
     protected:
@@ -36,6 +37,8 @@ class OSMC {
         byte pwm, reverseDirection, brake, outputEnabled;
         byte enablePin=0xFF, aliPin=0xFF, bliPin=0xFF, ahiPin=0xFF, bhiPin=0xFF;
     private:
+        byte rampTarget=0;
+        bool rampEnabled=false;
         void driveOutput();
 };
 
